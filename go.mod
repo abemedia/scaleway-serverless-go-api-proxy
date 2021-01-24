@@ -1,11 +1,10 @@
-module github.com/awslabs/aws-lambda-go-api-proxy
+module github.com/abemedia/scaleway-serverless-go-api-proxy
 
 go 1.14
 
 require (
 	github.com/ajg/form v1.5.1 // indirect
 	github.com/andybalholm/brotli v1.0.1 // indirect
-	github.com/aws/aws-lambda-go v1.19.1
 	github.com/fasthttp-contrib/websocket v0.0.0-20160511215533-1f3b11f56072 // indirect
 	github.com/gin-gonic/gin v1.6.3
 	github.com/go-chi/chi v4.1.2+incompatible
@@ -27,7 +26,9 @@ require (
 	github.com/moul/http2curl v1.0.0 // indirect
 	github.com/onsi/ginkgo v1.14.0
 	github.com/onsi/gomega v1.10.1
+	github.com/scaleway/scaleway-functions-go v0.0.0-20201119104420-4e68d6a64a4d
 	github.com/sergi/go-diff v1.1.0 // indirect
+	github.com/shurcooL/sanitized_anchor_name v1.0.0 // indirect
 	github.com/smartystreets/goconvey v1.6.4 // indirect
 	github.com/urfave/negroni v1.0.0
 	github.com/valyala/fasthttp v1.16.0

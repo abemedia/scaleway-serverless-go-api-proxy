@@ -8,9 +8,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/aws/aws-lambda-go/events"
-	"github.com/aws/aws-lambda-go/lambdacontext"
-	"github.com/awslabs/aws-lambda-go-api-proxy/core"
+	"github.com/abemedia/scaleway-serverless-go-api-proxy/core"
+	"github.com/scaleway/scaleway-functions-go/events"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -94,7 +93,6 @@ var _ = Describe("RequestAccessor tests", func() {
 		})
 
 		// Support `QueryStringParameters` for backward compatibility.
-		// https://github.com/awslabs/aws-lambda-go-api-proxy/issues/37
 		qsRequest := getProxyRequest("/hello", "GET")
 		qsRequest.QueryStringParameters = map[string]string{
 			"hello": "1",
@@ -174,7 +172,7 @@ var _ = Describe("RequestAccessor tests", func() {
 			// calling old method to verify reverse compatibility
 			httpReq, err := accessor.ProxyEventToHTTPRequest(contextRequest)
 			Expect(err).To(BeNil())
-			Expect(2).To(Equal(len(httpReq.Header)))
+			Expect(3).To(Equal(len(httpReq.Header)))
 			Expect(httpReq.Header.Get(core.APIGwContextHeader)).ToNot(BeNil())
 		})
 	})
@@ -225,27 +223,6 @@ var _ = Describe("RequestAccessor tests", func() {
 			Expect("x").To(Equal(proxyContext.RequestID))
 			Expect("x").To(Equal(proxyContext.APIID))
 			Expect("prod").To(Equal(proxyContext.Stage))
-			runtimeContext, ok := core.GetRuntimeContextFromContext(httpReq.Context())
-			Expect(ok).To(BeTrue())
-			Expect(runtimeContext).To(BeNil())
-
-			lambdaContext := lambdacontext.NewContext(context.Background(), &lambdacontext.LambdaContext{AwsRequestID: "abc123"})
-			httpReq, err = accessor.EventToRequestWithContext(lambdaContext, contextRequest)
-			Expect(err).To(BeNil())
-
-			headerContext, err = accessor.GetAPIGatewayContext(httpReq)
-			// should fail as new context method doesn't populate headers
-			Expect(err).ToNot(BeNil())
-			proxyContext, ok = core.GetAPIGatewayContextFromContext(httpReq.Context())
-			Expect(ok).To(BeTrue())
-			Expect("x").To(Equal(proxyContext.APIID))
-			Expect("x").To(Equal(proxyContext.RequestID))
-			Expect("x").To(Equal(proxyContext.APIID))
-			Expect("prod").To(Equal(proxyContext.Stage))
-			runtimeContext, ok = core.GetRuntimeContextFromContext(httpReq.Context())
-			Expect(ok).To(BeTrue())
-			Expect(runtimeContext).ToNot(BeNil())
-			Expect("abc123").To(Equal(runtimeContext.AwsRequestID))
 		})
 
 		It("Populates stage variables correctly", func() {
@@ -292,8 +269,8 @@ var _ = Describe("RequestAccessor tests", func() {
 			httpReq, err := accessor.ProxyEventToHTTPRequest(basicRequest)
 			Expect(err).To(BeNil())
 
-			Expect(basicRequest.RequestContext.DomainName).To(Equal(httpReq.Host))
-			Expect(basicRequest.RequestContext.DomainName).To(Equal(httpReq.URL.Host))
+			Expect(basicRequest.Headers["host"]).To(Equal(httpReq.Host))
+			Expect(basicRequest.Headers["host"]).To(Equal(httpReq.URL.Host))
 		})
 
 		It("Uses a custom hostname", func() {
@@ -328,16 +305,18 @@ func getProxyRequest(path string, method string) events.APIGatewayProxyRequest {
 	return events.APIGatewayProxyRequest{
 		Path:       path,
 		HTTPMethod: method,
+		Headers: map[string]string{
+			"host": "example.com",
+		},
 	}
 }
 
 func getRequestContext() events.APIGatewayProxyRequestContext {
 	return events.APIGatewayProxyRequestContext{
-		AccountID:  "x",
-		RequestID:  "x",
-		APIID:      "x",
-		Stage:      "prod",
-		DomainName: "12abcdefgh.execute-api.us-east-2.amazonaws.com",
+		AccountID: "x",
+		RequestID: "x",
+		APIID:     "x",
+		Stage:     "prod",
 	}
 }
 

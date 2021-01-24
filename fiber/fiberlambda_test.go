@@ -4,9 +4,9 @@ import (
 	"context"
 	"log"
 
-	"github.com/aws/aws-lambda-go/events"
-	fiberadaptor "github.com/awslabs/aws-lambda-go-api-proxy/fiber"
+	fiberadaptor "github.com/abemedia/scaleway-serverless-go-api-proxy/fiber"
 	"github.com/gofiber/fiber/v2"
+	"github.com/scaleway/scaleway-functions-go/events"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"

@@ -9,7 +9,7 @@ import (
 	"net/http"
 	"unicode/utf8"
 
-	"github.com/aws/aws-lambda-go/events"
+	"github.com/scaleway/scaleway-functions-go/events"
 )
 
 const defaultStatusCode = -1

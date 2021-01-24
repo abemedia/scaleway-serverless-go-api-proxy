@@ -6,28 +6,28 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/aws/aws-lambda-go/events"
-	"github.com/aws/aws-lambda-go/lambda"
-	ginadapter "github.com/awslabs/aws-lambda-go-api-proxy/gin"
+	"github.com/abemedia/scaleway-serverless-go-api-proxy/httpadapter"
 	"github.com/gin-gonic/gin"
+	"github.com/scaleway/scaleway-functions-go/events"
+	"github.com/scaleway/scaleway-functions-go/lambda"
 )
 
-var ginLambda *ginadapter.GinLambda
+var ginLambda *httpadapter.HandlerAdapter
+
+func init() {
+	// stdout and stderr are sent to AWS CloudWatch Logs
+	log.Printf("Gin cold start")
+	r := gin.Default()
+	r.GET("/pets", getPets)
+	r.GET("/pets/:id", getPet)
+	r.POST("/pets", createPet)
+
+	ginLambda = httpadapter.New(r)
+}
 
 // Handler is the main entry point for Lambda. Receives a proxy request and
 // returns a proxy response
 func Handler(ctx context.Context, req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	if ginLambda == nil {
-		// stdout and stderr are sent to AWS CloudWatch Logs
-		log.Printf("Gin cold start")
-		r := gin.Default()
-		r.GET("/pets", getPets)
-		r.GET("/pets/:id", getPet)
-		r.POST("/pets", createPet)
-
-		ginLambda = ginadapter.New(r)
-	}
-
 	return ginLambda.ProxyWithContext(ctx, req)
 }
 

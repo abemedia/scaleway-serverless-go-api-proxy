@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/aws/aws-lambda-go/events"
+	"github.com/scaleway/scaleway-functions-go/events"
 )
 
 // GatewayTimeout returns a dafault Gateway Timeout (504) response

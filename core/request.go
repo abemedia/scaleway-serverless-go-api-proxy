@@ -15,8 +15,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/aws/aws-lambda-go/events"
-	"github.com/aws/aws-lambda-go/lambdacontext"
+	"github.com/scaleway/scaleway-functions-go/events"
 )
 
 // CustomHostVariable is the name of the environment variable that contains
@@ -146,7 +145,7 @@ func (r *RequestAccessor) EventToRequest(req events.APIGatewayProxyRequest) (*ht
 	if !strings.HasPrefix(path, "/") {
 		path = "/" + path
 	}
-	serverAddress := "https://" + req.RequestContext.DomainName
+	serverAddress := "https://" + req.Headers["host"]
 	if customAddress, ok := os.LookupEnv(CustomHostVariable); ok {
 		serverAddress = customAddress
 	}
@@ -165,7 +164,6 @@ func (r *RequestAccessor) EventToRequest(req events.APIGatewayProxyRequest) (*ht
 		path += "?" + queryString
 	} else if len(req.QueryStringParameters) > 0 {
 		// Support `QueryStringParameters` for backward compatibility.
-		// https://github.com/awslabs/aws-lambda-go-api-proxy/issues/37
 		queryString := ""
 		for q := range req.QueryStringParameters {
 			if queryString != "" {
@@ -222,8 +220,7 @@ func addToHeader(req *http.Request, apiGwRequest events.APIGatewayProxyRequest) 
 }
 
 func addToContext(ctx context.Context, req *http.Request, apiGwRequest events.APIGatewayProxyRequest) *http.Request {
-	lc, _ := lambdacontext.FromContext(ctx)
-	rc := requestContext{lambdaContext: lc, gatewayProxyContext: apiGwRequest.RequestContext, stageVars: apiGwRequest.StageVariables}
+	rc := requestContext{gatewayProxyContext: apiGwRequest.RequestContext, stageVars: apiGwRequest.StageVariables}
 	ctx = context.WithValue(ctx, ctxKey{}, rc)
 	return req.WithContext(ctx)
 }
@@ -232,12 +229,6 @@ func addToContext(ctx context.Context, req *http.Request, apiGwRequest events.AP
 func GetAPIGatewayContextFromContext(ctx context.Context) (events.APIGatewayProxyRequestContext, bool) {
 	v, ok := ctx.Value(ctxKey{}).(requestContext)
 	return v.gatewayProxyContext, ok
-}
-
-// GetRuntimeContextFromContext retrieve Lambda Runtime Context from context.Context
-func GetRuntimeContextFromContext(ctx context.Context) (*lambdacontext.LambdaContext, bool) {
-	v, ok := ctx.Value(ctxKey{}).(requestContext)
-	return v.lambdaContext, ok
 }
 
 // GetStageVarsFromContext retrieve stage variables from context
@@ -249,7 +240,6 @@ func GetStageVarsFromContext(ctx context.Context) (map[string]string, bool) {
 type ctxKey struct{}
 
 type requestContext struct {
-	lambdaContext       *lambdacontext.LambdaContext
 	gatewayProxyContext events.APIGatewayProxyRequestContext
 	stageVars           map[string]string
 }

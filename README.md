@@ -6,11 +6,11 @@ The first step is to install the required dependencies
 
 ```bash
 # First, we install the Lambda go libraries
-$ go get github.com/aws/aws-lambda-go/events
-$ go get github.com/aws/aws-lambda-go/lambda
+$ go get github.com/scaleway/scaleway-functions-go/events
+$ go get github.com/scaleway/scaleway-functions-go/lambda
 
 # Next, we install the core library
-$ go get github.com/awslabs/aws-lambda-go-api-proxy/...
+$ go get github.com/abemedia/scaleway-serverless-go-api-proxy/...
 ```
 
 Following the instructions from the [Lambda documentation](https://docs.aws.amazon.com/lambda/latest/dg/go-programming-model-handler-types.html), we need to declare a `Handler` method for our main package.
@@ -23,9 +23,9 @@ import (
 	"log"
 	"context"
 
-	"github.com/aws/aws-lambda-go/events"
-	"github.com/aws/aws-lambda-go/lambda"
-	"github.com/awslabs/aws-lambda-go-api-proxy/httpadapter"
+	"github.com/scaleway/scaleway-functions-go/events"
+	"github.com/scaleway/scaleway-functions-go/lambda"
+	"github.com/abemedia/scaleway-serverless-go-api-proxy/httpadapter"
 	"github.com/gin-gonic/gin"
 )
 

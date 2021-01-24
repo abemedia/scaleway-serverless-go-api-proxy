@@ -6,8 +6,8 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/aws/aws-lambda-go/events"
-	"github.com/awslabs/aws-lambda-go-api-proxy/handlerfunc"
+	"github.com/abemedia/scaleway-serverless-go-api-proxy/handlerfunc"
+	"github.com/scaleway/scaleway-functions-go/events"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"

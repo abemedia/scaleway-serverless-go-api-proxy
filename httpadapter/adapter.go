@@ -4,8 +4,8 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/aws/aws-lambda-go/events"
-	"github.com/awslabs/aws-lambda-go-api-proxy/core"
+	"github.com/abemedia/scaleway-serverless-go-api-proxy/core"
+	"github.com/scaleway/scaleway-functions-go/events"
 )
 
 type HandlerAdapter struct {
