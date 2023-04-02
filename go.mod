@@ -20,7 +20,7 @@ require (
 	github.com/klauspost/compress v1.11.1 // indirect
 	github.com/labstack/echo/v4 v4.1.17
 	github.com/mattn/go-colorable v0.1.8 // indirect
-	github.com/microcosm-cc/bluemonday v1.0.3 // indirect
+	github.com/microcosm-cc/bluemonday v1.0.23 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.1 // indirect
 	github.com/moul/http2curl v1.0.0 // indirect
@@ -38,6 +38,5 @@ require (
 	github.com/yudai/golcs v0.0.0-20170316035057-ecda9a501e82 // indirect
 	github.com/yudai/pp v2.0.1+incompatible // indirect
 	goji.io v2.0.2+incompatible
-	golang.org/x/sys v0.0.0-20201016160150-f659759dc4ca // indirect
 	google.golang.org/protobuf v1.25.0 // indirect
 )
