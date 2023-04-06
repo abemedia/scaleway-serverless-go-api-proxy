@@ -16,6 +16,6 @@ require (
 	github.com/scaleway/scaleway-functions-go v0.0.0-20201119104420-4e68d6a64a4d
 	github.com/sergi/go-diff v1.1.0 // indirect
 	github.com/urfave/negroni v1.0.0
-	github.com/valyala/fasthttp v1.16.0
+	github.com/valyala/fasthttp v1.34.0
 	goji.io v2.0.2+incompatible
 )
